@@ -7,15 +7,13 @@ pipeline {
         string(name: 'BACKEND_DIR', defaultValue: 'backend', description: 'Backend folder in repo')
         string(name: 'FRONTEND_DIR', defaultValue: 'frontend', description: 'Frontend folder in repo')
         string(name: 'DOCKER_HUB_USERNAME', defaultValue: '', description: 'Docker Hub username')
+        string(name: 'DOCKER_HUB_PASSWORD', defaultValue: '', description: 'Docker Hub password')
         string(name: 'DOCKER_HUB_BACKEND_REPO', defaultValue: 'backend', description: 'Docker Hub backend repo name')
         string(name: 'DOCKER_HUB_FRONTEND_REPO', defaultValue: 'frontend', description: 'Docker Hub frontend repo name')
         string(name: 'DOCKER_IMAGE_TAG', defaultValue: '1.0.0', description: 'Docker image tag/version')
     }
 
-    environment {
-        // Use Jenkins credentials ID named 'dockerhub-password' for password securely
-        DOCKER_HUB_PASSWORD = credentials('dockerhub-password')
-    }
+
 
     stages {
         stage('Checkout Code') {
