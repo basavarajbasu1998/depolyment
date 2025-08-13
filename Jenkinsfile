@@ -23,7 +23,7 @@ pipeline {
         stage('Build Backend') {
             steps {
                 dir(params.BACKEND_DIR) {
-                    bat 'mvn clean package -DskipTests'
+                    sh 'mvn clean package -DskipTests'
                 }
             }
         }
@@ -31,7 +31,7 @@ pipeline {
         stage('Build Backend Docker Image') {
             steps {
                 dir(params.BACKEND_DIR) {
-                    bat "docker build -t ${params.DOCKER_HUB_USERNAME}/${params.DOCKER_HUB_BACKEND_REPO}:${params.DOCKER_IMAGE_TAG} ."
+                    sh "docker build -t ${params.DOCKER_HUB_USERNAME}/${params.DOCKER_HUB_BACKEND_REPO}:${params.DOCKER_IMAGE_TAG} ."
                 }
             }
         }
@@ -39,8 +39,8 @@ pipeline {
         stage('Build Frontend') {
             steps {
                 dir(params.FRONTEND_DIR) {
-                    bat 'npm install'
-                    bat 'npm run build'
+                    sh 'npm install'
+                    sh 'npm run build'
                 }
             }
         }
@@ -48,7 +48,7 @@ pipeline {
         stage('Build Frontend Docker Image') {
             steps {
                 dir(params.FRONTEND_DIR) {
-                    bat "docker build -t ${params.DOCKER_HUB_USERNAME}/${params.DOCKER_HUB_FRONTEND_REPO}:${params.DOCKER_IMAGE_TAG} ."
+                    sh "docker build -t ${params.DOCKER_HUB_USERNAME}/${params.DOCKER_HUB_FRONTEND_REPO}:${params.DOCKER_IMAGE_TAG} ."
                 }
             }
         }
@@ -56,10 +56,10 @@ pipeline {
         stage('Push Images to Docker Hub') {
             steps {
                 script {
-                    // Login to Docker Hub using plain password input
-                    bat "echo ${params.DOCKER_HUB_PASSWORD} | docker login -u ${params.DOCKER_HUB_USERNAME} --password-stdin"
-                    bat "docker push ${params.DOCKER_HUB_USERNAME}/${params.DOCKER_HUB_BACKEND_REPO}:${params.DOCKER_IMAGE_TAG}"
-                    bat "docker push ${params.DOCKER_HUB_USERNAME}/${params.DOCKER_HUB_FRONTEND_REPO}:${params.DOCKER_IMAGE_TAG}"
+                    // Login to Docker Hub securely
+                    sh "echo '${params.DOCKER_HUB_PASSWORD}' | docker login -u ${params.DOCKER_HUB_USERNAME} --password-stdin"
+                    sh "docker push ${params.DOCKER_HUB_USERNAME}/${params.DOCKER_HUB_BACKEND_REPO}:${params.DOCKER_IMAGE_TAG}"
+                    sh "docker push ${params.DOCKER_HUB_USERNAME}/${params.DOCKER_HUB_FRONTEND_REPO}:${params.DOCKER_IMAGE_TAG}"
                 }
             }
         }
