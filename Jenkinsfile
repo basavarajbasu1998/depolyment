@@ -35,6 +35,7 @@ pipeline {
         }
 
         stage('Build Backend Docker Image') {
+            agent any  // run on host where docker is available
             steps {
                 dir(params.BACKEND_DIR) {
                     sh "docker build -t ${params.DOCKER_HUB_USERNAME}/${params.DOCKER_HUB_BACKEND_REPO}:${params.DOCKER_IMAGE_TAG} ."
@@ -58,6 +59,7 @@ pipeline {
         }
 
         stage('Build Frontend Docker Image') {
+            agent any  // run on host where docker is available
             steps {
                 dir(params.FRONTEND_DIR) {
                     sh "docker build -t ${params.DOCKER_HUB_USERNAME}/${params.DOCKER_HUB_FRONTEND_REPO}:${params.DOCKER_IMAGE_TAG} ."
@@ -66,6 +68,7 @@ pipeline {
         }
 
         stage('Push Images to Docker Hub') {
+            agent any  // run on host where docker is available
             steps {
                 script {
                     sh "echo '${params.DOCKER_HUB_PASSWORD}' | docker login -u ${params.DOCKER_HUB_USERNAME} --password-stdin"
