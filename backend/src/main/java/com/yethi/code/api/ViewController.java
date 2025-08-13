@@ -1,13 +1,13 @@
 package com.yethi.code.api;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@RestController
+@Controller
 public class ViewController {
 
 	@GetMapping(value = { "/", "/{x:[\\w\\-]+}", "/{x:[\\w\\-]+}/", "/{x:^(?!api$).*$}/**/{y:[\\w\\-]+}",
