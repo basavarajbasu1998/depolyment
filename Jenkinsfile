@@ -21,6 +21,12 @@ pipeline {
         }
 
         stage('Build Backend') {
+            agent {
+                docker {
+                    image 'maven:3.9.6-amazoncorretto-21'
+                    args '-v /root/.m2:/root/.m2'
+                }
+            }
             steps {
                 dir(params.BACKEND_DIR) {
                     sh 'mvn clean package -DskipTests'
@@ -37,6 +43,12 @@ pipeline {
         }
 
         stage('Build Frontend') {
+            agent {
+                docker {
+                    image 'node:18'
+                    args '-v $HOME/.npm:/root/.npm'
+                }
+            }
             steps {
                 dir(params.FRONTEND_DIR) {
                     sh 'npm install'
@@ -56,7 +68,6 @@ pipeline {
         stage('Push Images to Docker Hub') {
             steps {
                 script {
-                    // Login to Docker Hub securely
                     sh "echo '${params.DOCKER_HUB_PASSWORD}' | docker login -u ${params.DOCKER_HUB_USERNAME} --password-stdin"
                     sh "docker push ${params.DOCKER_HUB_USERNAME}/${params.DOCKER_HUB_BACKEND_REPO}:${params.DOCKER_IMAGE_TAG}"
                     sh "docker push ${params.DOCKER_HUB_USERNAME}/${params.DOCKER_HUB_FRONTEND_REPO}:${params.DOCKER_IMAGE_TAG}"
