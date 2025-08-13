@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'docker' } // Use the Docker-enabled Jenkins node
+    agent any
 
     parameters {
         string(name: 'GIT_REPO_URL', defaultValue: 'https://github.com/basavarajbasu1998/depolyment.git', description: 'Git repository URL')
